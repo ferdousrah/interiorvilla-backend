@@ -17,10 +17,12 @@ import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 
-import Projects from './collections/Projects';
-import ProjectCategories from './collections/ProjectCategories';
+import Projects from './collections/Projects'
+import ProjectCategories from './collections/ProjectCategories'
+import Services from './collections/Services'
+import Testimonials from './collections/Testimonials'
 
-import Home from './globals/Home';
+import Home from './globals/Home'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -69,7 +71,17 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URI || '',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users, Projects, ProjectCategories],
+  collections: [
+    Pages,
+    Posts,
+    Media,
+    Categories,
+    Users,
+    Projects,
+    ProjectCategories,
+    Services,
+    Testimonials,
+  ],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer, Home],
   plugins: [

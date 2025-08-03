@@ -74,6 +74,8 @@ export interface Config {
     users: User;
     projects: Project;
     'project-categories': ProjectCategory;
+    services: Service;
+    testimonials: Testimonial;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -92,6 +94,8 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     'project-categories': ProjectCategoriesSelect<false> | ProjectCategoriesSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
+    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -806,6 +810,34 @@ export interface ProjectCategory {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services".
+ */
+export interface Service {
+  id: number;
+  title: string;
+  shortDescription?: string | null;
+  introVideo?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials".
+ */
+export interface Testimonial {
+  id: number;
+  title: string;
+  shortDetails?: string | null;
+  coverImage?: (number | null) | Media;
+  /**
+   * Paste the video URL (YouTube, Vimeo, etc.)
+   */
+  videoUrl?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1004,6 +1036,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'project-categories';
         value: number | ProjectCategory;
+      } | null)
+    | ({
+        relationTo: 'services';
+        value: number | Service;
+      } | null)
+    | ({
+        relationTo: 'testimonials';
+        value: number | Testimonial;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1421,6 +1461,29 @@ export interface ProjectCategoriesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services_select".
+ */
+export interface ServicesSelect<T extends boolean = true> {
+  title?: T;
+  shortDescription?: T;
+  introVideo?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials_select".
+ */
+export interface TestimonialsSelect<T extends boolean = true> {
+  title?: T;
+  shortDetails?: T;
+  coverImage?: T;
+  videoUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects_select".
  */
 export interface RedirectsSelect<T extends boolean = true> {
@@ -1742,6 +1805,48 @@ export interface Home {
     sectionTitle?: string | null;
     sectionDescription?: string | null;
     projects?: (number | Project)[] | null;
+    backgroundColor?: string | null;
+  };
+  aboutSection?: {
+    sectionTitle?: string | null;
+    shortDescription?: string | null;
+    beforeAfterImages?:
+      | {
+          image?: (number | null) | Media;
+          id?: string | null;
+        }[]
+      | null;
+    highlights?:
+      | {
+          text?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    backgroundColor?: string | null;
+  };
+  servicesSection?: {
+    sectionTitle?: string | null;
+    shortDescription?: string | null;
+    services?: (number | Service)[] | null;
+    backgroundColor?: string | null;
+  };
+  ourProcess?: {
+    sectionTitle?: string | null;
+    shortDescription?: string | null;
+    steps?:
+      | {
+          icon?: (number | null) | Media;
+          title?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    backgroundColor?: string | null;
+  };
+  clientStories?: {
+    sectionTitle?: string | null;
+    shortDescription?: string | null;
+    testimonials?: (number | Testimonial)[] | null;
+    backgroundColor?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1803,6 +1908,56 @@ export interface HomeSelect<T extends boolean = true> {
         sectionTitle?: T;
         sectionDescription?: T;
         projects?: T;
+        backgroundColor?: T;
+      };
+  aboutSection?:
+    | T
+    | {
+        sectionTitle?: T;
+        shortDescription?: T;
+        beforeAfterImages?:
+          | T
+          | {
+              image?: T;
+              id?: T;
+            };
+        highlights?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        backgroundColor?: T;
+      };
+  servicesSection?:
+    | T
+    | {
+        sectionTitle?: T;
+        shortDescription?: T;
+        services?: T;
+        backgroundColor?: T;
+      };
+  ourProcess?:
+    | T
+    | {
+        sectionTitle?: T;
+        shortDescription?: T;
+        steps?:
+          | T
+          | {
+              icon?: T;
+              title?: T;
+              id?: T;
+            };
+        backgroundColor?: T;
+      };
+  clientStories?:
+    | T
+    | {
+        sectionTitle?: T;
+        shortDescription?: T;
+        testimonials?: T;
+        backgroundColor?: T;
       };
   updatedAt?: T;
   createdAt?: T;
