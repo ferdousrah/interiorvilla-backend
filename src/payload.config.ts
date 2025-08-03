@@ -21,8 +21,15 @@ import Projects from './collections/Projects'
 import ProjectCategories from './collections/ProjectCategories'
 import Services from './collections/Services'
 import Testimonials from './collections/Testimonials'
+import TeamMembers from './collections/TeamMembers'
+import BlogPosts from './collections/BlogPosts'
+import BlogCategories from './collections/BlogCategories'
+import Offices from './collections/Offices'
 
 import Home from './globals/Home'
+import About from './globals/About'
+import Portfolio from './globals/Portfolio'
+import Contact from './globals/Contact'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -81,9 +88,13 @@ export default buildConfig({
     ProjectCategories,
     Services,
     Testimonials,
+    TeamMembers,
+    BlogPosts,
+    BlogCategories,
+    Offices,
   ],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer, Home],
+  globals: [Header, Footer, Home, About, Portfolio, Contact],
   plugins: [
     ...plugins,
     // storage-adapter-placeholder

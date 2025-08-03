@@ -76,6 +76,10 @@ export interface Config {
     'project-categories': ProjectCategory;
     services: Service;
     testimonials: Testimonial;
+    'team-members': TeamMember;
+    'blog-posts': BlogPost;
+    'blog-categories': BlogCategory;
+    offices: Office;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -96,6 +100,10 @@ export interface Config {
     'project-categories': ProjectCategoriesSelect<false> | ProjectCategoriesSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
+    'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
+    'blog-posts': BlogPostsSelect<false> | BlogPostsSelect<true>;
+    'blog-categories': BlogCategoriesSelect<false> | BlogCategoriesSelect<true>;
+    offices: OfficesSelect<false> | OfficesSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -112,11 +120,17 @@ export interface Config {
     header: Header;
     footer: Footer;
     home: Home;
+    about: About;
+    portfolio: Portfolio;
+    contact: Contact;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     home: HomeSelect<false> | HomeSelect<true>;
+    about: AboutSelect<false> | AboutSelect<true>;
+    portfolio: PortfolioSelect<false> | PortfolioSelect<true>;
+    contact: ContactSelect<false> | ContactSelect<true>;
   };
   locale: null;
   user: User & {
@@ -815,8 +829,40 @@ export interface ProjectCategory {
 export interface Service {
   id: number;
   title: string;
+  /**
+   * URL slug (e.g., residential-interior)
+   */
+  slug: string;
   shortDescription?: string | null;
+  /**
+   * Optional video link or embed code
+   */
   introVideo?: string | null;
+  hero?: {
+    heroImage?: (number | null) | Media;
+    title?: string | null;
+    subtitle?: string | null;
+  };
+  introSection?: {
+    sectionTitle?: string | null;
+    description?: string | null;
+  };
+  ourApproach?: {
+    sectionTitle?: string | null;
+    description?: string | null;
+    approaches?:
+      | {
+          title?: string | null;
+          description?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  recentProjects?: {
+    sectionTitle?: string | null;
+    sectionDescription?: string | null;
+    projects?: (number | Project)[] | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -833,6 +879,81 @@ export interface Testimonial {
    * Paste the video URL (YouTube, Vimeo, etc.)
    */
   videoUrl?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members".
+ */
+export interface TeamMember {
+  id: number;
+  name: string;
+  designation?: string | null;
+  licenseNumber?: string | null;
+  photo?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-posts".
+ */
+export interface BlogPost {
+  id: number;
+  title: string;
+  slug: string;
+  featuredImage?: (number | null) | Media;
+  shortDescription?: string | null;
+  fullContent?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  category: number | BlogCategory;
+  tags?:
+    | {
+        tag?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  publishedDate: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-categories".
+ */
+export interface BlogCategory {
+  id: number;
+  title: string;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offices".
+ */
+export interface Office {
+  id: number;
+  title: string;
+  address: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  phone?: string | null;
+  email?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1044,6 +1165,22 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'testimonials';
         value: number | Testimonial;
+      } | null)
+    | ({
+        relationTo: 'team-members';
+        value: number | TeamMember;
+      } | null)
+    | ({
+        relationTo: 'blog-posts';
+        value: number | BlogPost;
+      } | null)
+    | ({
+        relationTo: 'blog-categories';
+        value: number | BlogCategory;
+      } | null)
+    | ({
+        relationTo: 'offices';
+        value: number | Office;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1465,8 +1602,42 @@ export interface ProjectCategoriesSelect<T extends boolean = true> {
  */
 export interface ServicesSelect<T extends boolean = true> {
   title?: T;
+  slug?: T;
   shortDescription?: T;
   introVideo?: T;
+  hero?:
+    | T
+    | {
+        heroImage?: T;
+        title?: T;
+        subtitle?: T;
+      };
+  introSection?:
+    | T
+    | {
+        sectionTitle?: T;
+        description?: T;
+      };
+  ourApproach?:
+    | T
+    | {
+        sectionTitle?: T;
+        description?: T;
+        approaches?:
+          | T
+          | {
+              title?: T;
+              description?: T;
+              id?: T;
+            };
+      };
+  recentProjects?:
+    | T
+    | {
+        sectionTitle?: T;
+        sectionDescription?: T;
+        projects?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1479,6 +1650,63 @@ export interface TestimonialsSelect<T extends boolean = true> {
   shortDetails?: T;
   coverImage?: T;
   videoUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members_select".
+ */
+export interface TeamMembersSelect<T extends boolean = true> {
+  name?: T;
+  designation?: T;
+  licenseNumber?: T;
+  photo?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-posts_select".
+ */
+export interface BlogPostsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  featuredImage?: T;
+  shortDescription?: T;
+  fullContent?: T;
+  category?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  publishedDate?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-categories_select".
+ */
+export interface BlogCategoriesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offices_select".
+ */
+export interface OfficesSelect<T extends boolean = true> {
+  title?: T;
+  address?: T;
+  latitude?: T;
+  longitude?: T;
+  phone?: T;
+  email?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1853,6 +2081,114 @@ export interface Home {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about".
+ */
+export interface About {
+  id: number;
+  hero: {
+    heroImage: number | Media;
+    title?: string | null;
+    subtitle?: string | null;
+  };
+  introSection?: {
+    sectionTitle?: string | null;
+    description?: string | null;
+    introVideo?: string | null;
+    stats?:
+      | {
+          label?: string | null;
+          value?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  ourApproach?: {
+    sectionTitle?: string | null;
+    description?: string | null;
+    approaches?:
+      | {
+          icon?: (number | null) | Media;
+          title?: string | null;
+          description?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  missionVision?: {
+    sectionTitle?: string | null;
+    description?: string | null;
+    missionContent?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    visionContent?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
+  teamSection?: {
+    sectionTitle?: string | null;
+    description?: string | null;
+    teamMembers?: (number | TeamMember)[] | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "portfolio".
+ */
+export interface Portfolio {
+  id: number;
+  hero?: {
+    heroImage?: (number | null) | Media;
+    title?: string | null;
+    subtitle?: string | null;
+  };
+  introText?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact".
+ */
+export interface Contact {
+  id: number;
+  hero?: {
+    heroImage?: (number | null) | Media;
+    title?: string | null;
+    subtitle?: string | null;
+  };
+  introText?: string | null;
+  offices?: (number | Office)[] | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -1959,6 +2295,100 @@ export interface HomeSelect<T extends boolean = true> {
         testimonials?: T;
         backgroundColor?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about_select".
+ */
+export interface AboutSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        heroImage?: T;
+        title?: T;
+        subtitle?: T;
+      };
+  introSection?:
+    | T
+    | {
+        sectionTitle?: T;
+        description?: T;
+        introVideo?: T;
+        stats?:
+          | T
+          | {
+              label?: T;
+              value?: T;
+              id?: T;
+            };
+      };
+  ourApproach?:
+    | T
+    | {
+        sectionTitle?: T;
+        description?: T;
+        approaches?:
+          | T
+          | {
+              icon?: T;
+              title?: T;
+              description?: T;
+              id?: T;
+            };
+      };
+  missionVision?:
+    | T
+    | {
+        sectionTitle?: T;
+        description?: T;
+        missionContent?: T;
+        visionContent?: T;
+      };
+  teamSection?:
+    | T
+    | {
+        sectionTitle?: T;
+        description?: T;
+        teamMembers?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "portfolio_select".
+ */
+export interface PortfolioSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        heroImage?: T;
+        title?: T;
+        subtitle?: T;
+      };
+  introText?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact_select".
+ */
+export interface ContactSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        heroImage?: T;
+        title?: T;
+        subtitle?: T;
+      };
+  introText?: T;
+  offices?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

@@ -1,41 +1,13 @@
-import { CollectionConfig } from 'payload/types'
+import { GlobalConfig } from 'payload/types'
 
-const Services: CollectionConfig = {
-  slug: 'services',
-  admin: {
-    useAsTitle: 'title',
-  },
+const About: GlobalConfig = {
+  slug: 'about',
   fields: [
-    {
-      name: 'title',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'slug',
-      type: 'text',
-      required: true,
-      unique: true,
-      admin: {
-        description: 'URL slug (e.g., residential-interior)',
-      },
-    },
-    {
-      name: 'shortDescription',
-      type: 'textarea',
-    },
-    {
-      name: 'introVideo',
-      type: 'text',
-      admin: {
-        description: 'Optional video link or embed code',
-      },
-    },
     {
       name: 'hero',
       type: 'group',
       fields: [
-        { name: 'heroImage', type: 'upload', relationTo: 'media' },
+        { name: 'heroImage', type: 'upload', relationTo: 'media', required: true },
         { name: 'title', type: 'text' },
         { name: 'subtitle', type: 'textarea' },
       ],
@@ -46,6 +18,15 @@ const Services: CollectionConfig = {
       fields: [
         { name: 'sectionTitle', type: 'text' },
         { name: 'description', type: 'textarea' },
+        { name: 'introVideo', type: 'text' },
+        {
+          name: 'stats',
+          type: 'array',
+          fields: [
+            { name: 'label', type: 'text' },
+            { name: 'value', type: 'text' },
+          ],
+        },
       ],
     },
     {
@@ -58,6 +39,7 @@ const Services: CollectionConfig = {
           name: 'approaches',
           type: 'array',
           fields: [
+            { name: 'icon', type: 'upload', relationTo: 'media' },
             { name: 'title', type: 'text' },
             { name: 'description', type: 'textarea' },
           ],
@@ -65,15 +47,25 @@ const Services: CollectionConfig = {
       ],
     },
     {
-      name: 'recentProjects',
+      name: 'missionVision',
       type: 'group',
       fields: [
         { name: 'sectionTitle', type: 'text' },
-        { name: 'sectionDescription', type: 'textarea' },
+        { name: 'description', type: 'textarea' },
+        { name: 'missionContent', type: 'richText' },
+        { name: 'visionContent', type: 'richText' },
+      ],
+    },
+    {
+      name: 'teamSection',
+      type: 'group',
+      fields: [
+        { name: 'sectionTitle', type: 'text' },
+        { name: 'description', type: 'textarea' },
         {
-          name: 'projects',
+          name: 'teamMembers',
           type: 'relationship',
-          relationTo: 'projects',
+          relationTo: 'team-members',
           hasMany: true,
         },
       ],
@@ -81,4 +73,4 @@ const Services: CollectionConfig = {
   ],
 }
 
-export default Services
+export default About
